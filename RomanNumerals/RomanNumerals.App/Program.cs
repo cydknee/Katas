@@ -1,73 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RomanNumerals.App;
+using System;
 
 namespace RomanNumerals
 {
     public class Program
     {
-        public List<(string roman, int arabic)> values = new List<(string roman, int arabic)>
-        { 
-            ("M", 1000), 
-            ("D", 500), 
-            ("C", 100),
-            ("L", 50),
-            ("X", 10),
-            ("V", 5),
-            ("I", 1)
-        };
+        
 
         static void Main(string[] args)
         {
-            var program = new Program();
+            var arabicToRoman = new ArabicToRoman();
             Console.WriteLine("Enter a number");
             var number = Console.ReadLine();
-            var result = program.CalcNumerals(Convert.ToInt32(number));
+            var result = arabicToRoman.CalcNumerals(Convert.ToInt32(number));
             Console.WriteLine(result);
-        }
-
-        public string CalcNumerals(int number)
-        {
-            var numeralString = "";
-
-            for (var i = 0; i < values.Count-1; i++)
-            {
-                (numeralString, number) = TensOrFives(number, values[i].arabic, values[i].roman, numeralString);
-                if (values[i].arabic.ToString().StartsWith("5"))
-                    (numeralString, number) = FourOrNines(values[i + 1].roman + values[i].roman, number, numeralString, values[i].arabic - values[i+1].arabic);
-                else
-                    (numeralString, number) = FourOrNines(values[i+2].roman + values[i].roman,  number, numeralString, values[i].arabic - values[i+2].arabic);
-            }
-
-            numeralString = AddLettersToString(values[values.Count-1].roman, number, numeralString);
-
-            return numeralString;
-        }
-
-        public (string, int) TensOrFives(int input, int arabic, string roman, string numeralString)
-        {
-            var numberOfLetters = Math.Floor(Convert.ToDecimal(input / arabic));
-            numeralString = AddLettersToString(roman, numberOfLetters, numeralString);
-            input -=  Convert.ToInt32(numberOfLetters * arabic);
-
-            return (numeralString, input);
-        }
-
-        public (string, int) FourOrNines(string letter, int number, string numeralString, int numberOnTest)
-        {
-            if (number >= numberOnTest)
-            {
-                numeralString += letter;
-                number -= numberOnTest;
-            }
-            return (numeralString, number);
-        }
-
-        public string AddLettersToString(string letter, decimal numberOfLetters, string numeralString)
-        {
-            for(var i = 0; i < numberOfLetters; i++)
-                numeralString += letter;
-            
-            return numeralString;
         }
     }
 }
